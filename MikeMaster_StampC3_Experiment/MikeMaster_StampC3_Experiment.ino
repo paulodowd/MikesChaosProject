@@ -32,6 +32,8 @@ RobotGotoStatus_t gotoStatus;
 RobotPIDGains_t leftPIDGains;
 RobotPIDGains_t rightPIDGains;
 
+float fwd_vel = 100.0; // encoder counts per second
+
 
 // Class to implement hysteresis so that any noise on
 // the sensors can be ignored. Low and high
@@ -178,7 +180,7 @@ void runExperiment() {
 
   }
 
-  // Decide current state of received signal
+  // Decide current state of received IR signal
   bool signal = LOW;
   ir_signal.updateState( analogRead( 1 ) ); // get forward sensor
 
@@ -190,7 +192,7 @@ void runExperiment() {
 
   // Decision logic table
   if ( signal && surface ) {          // On surface at same time as other robot (reverse)
-    setWheelSpeed( -300, -300 );
+    setWheelSpeed( -fwd_vel, -fwd_vel );
 
   } else if ( !signal && surface ) {  // On surface, but other robot isn't (stop)
     setWheelSpeed( 0, 0 );
@@ -210,7 +212,6 @@ void runExperiment() {
 
 void lineFollowing() {
 
-  float fwd_vel   = 300.0;
   float turn_vel  = 0.0;
 
 
